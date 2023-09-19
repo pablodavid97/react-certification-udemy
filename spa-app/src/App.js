@@ -7,10 +7,10 @@ import ErrorPage from './pages/Error';
 import ProductDetail from './pages/ProductDetail';
 
 const routeDefinitions = createRoutesFromElements(
-    <Route path="/" element={<RootLayout />} errorElement={<ErrorPage />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/products" element={<ProductsPage />}/>
-        <Route path="/products/:productId" element={<ProductDetail />} />
+    <Route path="/root" element={<RootLayout />} errorElement={<ErrorPage />}>
+        <Route index={true} element={<HomePage />} />
+        <Route path="products" element={<ProductsPage />}/>
+        <Route path="products/:productId" element={<ProductDetail />} />
     </Route>
 );
 
