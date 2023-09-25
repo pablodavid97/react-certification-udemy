@@ -6,12 +6,15 @@ import {
     Route,
 } from 'react-router-dom';
 import HomePage from './components/HomePage';
-import EventsPage from './components/EventsPage';
-import EventDetailPage from './components/EventDetailPage';
+import EventsPage, { loader as eventsLoader } from './components/EventsPage';
+import EventDetailPage, { loader as eventDetailLoader, action as deleteEventAction} from './components/EventDetailPage';
 import NewEventPage from './components/NewEventPage';
 import EditEventPage from './components/EditEventPage';
 import RootLayout from './pages/RootLayout';
 import EventsRootLayout from './pages/EventsRootLayout';
+import ErrorPage from './pages/Error';
+import { action as handleEventAction } from './components/EventForm';
+import NewsletterPage, { action as newsletterAction } from './components/Newsletter';
 
 // Challenge / Exercise
 
@@ -36,14 +39,21 @@ import EventsRootLayout from './pages/EventsRootLayout';
 // BONUS: Add another (nested) layout route that adds the <EventNavigation> component above all /events... page components
 
 const routeDefinitions = createRoutesFromElements(
-    <Route path="/" element={<RootLayout />}>
+    <Route path='/' element={<RootLayout />} errorElement={<ErrorPage/>}>
         <Route index={true} element={<HomePage />} />
-        <Route path='events' element={<EventsRootLayout />} >
-            <Route index={true} element={<EventsPage />} />
-            <Route path=":eventId" element={<EventDetailPage />}/>
-            <Route path="new" element={<NewEventPage />} />
-            <Route path=":eventId/edit" element={<EditEventPage />} />
+        <Route path='events' element={<EventsRootLayout />}>
+            <Route
+                index={true}
+                element={<EventsPage />}
+                loader={eventsLoader}
+            />
+            <Route path=":eventId" id='event-detail' loader={eventDetailLoader} >
+                <Route index={true} element={<EventDetailPage />} action={deleteEventAction} />
+                <Route path='edit' element={<EditEventPage />} action={handleEventAction} />
+            </Route>
+            <Route path='new' element={<NewEventPage />} action={handleEventAction} />
         </Route>
+        <Route path='newsletter' element={<NewsletterPage/>} action={newsletterAction}/>
     </Route>
 );
 
